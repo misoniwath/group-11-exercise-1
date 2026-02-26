@@ -1,34 +1,30 @@
-{{! start }}
-<section class="card">
-  <div class="row-between">
-    <h2>Dashboard</h2>
-    <a href="/report">+ New Report</a>
-  </div>
+<h1>Reports</h1>
+<button>Add report</button>
 
-  {{#if reports.length}}
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Date</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each reports}}
-          <tr>
-            <td>{{this.id}}</td>
-            <td>{{this.name}}</td>
-            <td>{{this.date}}</td>
-            <td>{{this.status}}</td>
-            <td><a href="/items/{{this.id}}">View Details</a></td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  {{else}}
-    <p>No reports yet. <a href="/report">Submit the first report</a>.</p>
-  {{/if}}
-</section>
+<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+  <thead>
+    <tr style="background-color: #333; color: white;">
+      <th style="padding: 10px; text-align: left;">Report ID</th>
+      <th style="padding: 10px; text-align: left;">Name</th>
+      <th style="padding: 10px; text-align: center;">Date</th>
+      <th style="padding: 10px; text-align: center;">Status</th>
+      <th style="padding: 10px; text-align: center;">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+      <tr style="border-bottom: 1px solid #ddd;">
+        <td style="padding: 10px;">{{this.id}}</td>
+        <td style="padding: 10px;">{{this.name}}</td>
+        <td style="padding: 10px; text-align: center;">{{this.date}}</td>
+        <td style="padding: 10px; text-align: center;">{{this.status}}</td>
+        <td style="padding: 10px; text-align: center;">
+          <a
+            href="/items/{{this.id}}"
+            style="color: #007BFF; text-decoration: none;"
+          >View Details</a>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
