@@ -27,6 +27,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/detail", (req, res) => {
+  res.status(200);
   res.render("detail");
 });
 
