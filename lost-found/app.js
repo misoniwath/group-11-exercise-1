@@ -10,7 +10,11 @@ const reports = [];
 const uploadsDir = path.join(__dirname, "public", "uploads");
 const ALLOWED_STATUSES = new Set(["Lost", "Found", "Closed"]);
 
-fs.mkdirSync(uploadsDir, { recursive: true });
+// Security: disable x-powered-by header
+app.disable("x-powered-by");
+
+// In-memory storage (Report objects)
+const items = [];
 
 app.disable("x-powered-by");
 
@@ -30,8 +34,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-const getFirst = (value) => (Array.isArray(value) ? value[0] : value);
-
+// GET / - home (show report form)
 app.get("/", (req, res) => {
   res.redirect("/dashboard");
 });
@@ -96,40 +99,7 @@ app.get("/items", (req, res) => {
   res.render("items", { reports });
 });
 
-app.get("/items/:id", (req, res) => {
-  const report = reports.find((item) => item.id === req.params.id);
-
-  if (!report) {
-    return res.status(404).send("Report not found");
-  }
-
-  return res.render("detail", { report });
-});
-
-app.post("/items/:id/status", (req, res) => {
-  const report = reports.find((item) => item.id === req.params.id);
-  if (!report) {
-    return res.status(404).send("Report not found");
-  }
-
-  if (ALLOWED_STATUSES.has(req.body.status)) {
-    report.status = req.body.status;
-  }
-
-  return res.redirect(`/items/${report.id}`);
-});
-
-app.post("/items/:id/delete", (req, res) => {
-  const index = reports.findIndex((item) => item.id === req.params.id);
-
-  if (index !== -1) {
-    reports.splice(index, 1);
-  }
-
-  return res.redirect("/dashboard");
-});
-
-// GET /report - show the form
+// GET /report - show the report form (5pts)
 app.get("/report", (req, res) => {
   res.render("reportform");
 });
@@ -150,15 +120,16 @@ app.post("/report", (req, res) => {
     const contact = fields.contact?.[0]?.trim();
     const imageFile = files.image?.[0];
 
-    // Validate all fields present
+    // Validate that all fields are present
     if (!name || !description || !location || !date || !contact || !imageFile) {
       return res.status(400).send("All fields are required");
     }
 
-    // Save image - multiparty already saved to uploadDir, get filename
+    // Save the image - multiparty already saved to uploadDir
     const savedFilename = path.basename(imageFile.path);
     const imagePath = "/uploads/" + savedFilename;
 
+    // Push new object to array with initial status of Lost (Report schema)
     const newItem = {
       id: String(Date.now()),
       name,
@@ -173,6 +144,10 @@ app.post("/report", (req, res) => {
     items.push(newItem);
     res.redirect("/");
   });
+});
+
+app.get("/detail", (req, res) => {
+  res.render("detail");
 });
 
 app.listen(PORT, () => {
