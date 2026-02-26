@@ -1,1 +1,31 @@
-{{!-- start --}}
+<section class="card">
+  <h2>Item Details</h2>
+  <div class="detail-grid">
+    <div>
+      <p><strong>ID:</strong> {{report.id}}</p>
+      <p><strong>Name:</strong> {{report.name}}</p>
+      <p><strong>Description:</strong> {{report.description}}</p>
+      <p><strong>Location Lost:</strong> {{report.location}}</p>
+      <p><strong>Date:</strong> {{report.date}}</p>
+      <p><strong>Contact Email:</strong> {{report.contact}}</p>
+      <p><strong>Status:</strong> {{report.status}}</p>
+    </div>
+    <div>
+      <img src="{{report.imagePath}}" alt="{{report.name}}" class="item-image" />
+    </div>
+  </div>
+
+  <h3>Update Status</h3>
+  <form action="/items/{{report.id}}/status" method="post" class="status-form">
+    <select name="status">
+      <option value="Lost">Lost</option>
+      <option value="Found">Found</option>
+      <option value="Closed">Closed</option>
+    </select>
+    <button type="submit">Save Status</button>
+  </form>
+
+  <form action="/items/{{report.id}}/delete" method="post" class="delete-form">
+    <button type="submit">Delete Report</button>
+  </form>
+</section>

@@ -6,7 +6,9 @@ const multiparty = require("multiparty");
 
 const app = express();
 const PORT = 3000;
-const UPLOAD_DIR = path.join(__dirname, "public", "uploads");
+const reports = [];
+const uploadsDir = path.join(__dirname, "public", "uploads");
+const ALLOWED_STATUSES = new Set(["Lost", "Found", "Closed"]);
 
 // Security: disable x-powered-by header
 app.disable("x-powered-by");
@@ -14,17 +16,15 @@ app.disable("x-powered-by");
 // In-memory storage (Report objects)
 const items = [];
 
-// Ensure uploads directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
+app.disable("x-powered-by");
 
 app.engine(
   "hbs",
   engine({
     defaultLayout: "main",
-    extname: "hbs",
-    layoutsDir: path.join(__dirname, "views/layouts"),
+    extname: ".hbs",
+    layoutsDir: path.join(__dirname, "views", "layouts"),
+    partialsDir: path.join(__dirname, "views", "partials"),
   }),
 );
 
@@ -36,7 +36,67 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // GET / - home (show report form)
 app.get("/", (req, res) => {
-  res.render("reportform");
+  res.redirect("/dashboard");
+});
+
+app.get("/report", (req, res) => {
+  res.render("report");
+});
+
+app.post("/report", (req, res) => {
+  const form = new multiparty.Form({ uploadDir: uploadsDir });
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      return res.redirect("/report");
+    }
+
+    const name = getFirst(fields.name);
+    const description = getFirst(fields.description);
+    const location = getFirst(fields.location);
+    const date = getFirst(fields.date);
+    const contact = getFirst(fields.contact);
+    const image = files && files.image ? files.image[0] : null;
+
+    if (!name || !description || !location || !date || !contact || !image || !image.path) {
+      if (image && image.path) {
+        fs.unlink(image.path, () => {});
+      }
+      return res.redirect("/report");
+    }
+
+    const ext = path.extname(image.originalFilename || "") || ".jpg";
+    const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+    const targetPath = path.join(uploadsDir, fileName);
+
+    fs.rename(image.path, targetPath, (renameErr) => {
+      if (renameErr) {
+        fs.unlink(image.path, () => {});
+        return res.redirect("/report");
+      }
+
+      reports.push({
+        id: `${Date.now()}-${Math.round(Math.random() * 1e9)}`,
+        name,
+        description,
+        location,
+        date,
+        contact,
+        imagePath: `/uploads/${fileName}`,
+        status: "Lost",
+      });
+
+      return res.redirect("/dashboard");
+    });
+  });
+});
+
+app.get("/dashboard", (req, res) => {
+  res.render("dashboard", { reports });
+});
+
+app.get("/items", (req, res) => {
+  res.render("items", { reports });
 });
 
 // GET /report - show the report form (5pts)
