@@ -129,6 +129,52 @@ app.post("/items/:id/delete", (req, res) => {
   return res.redirect("/dashboard");
 });
 
+// GET /report - show the form
+app.get("/report", (req, res) => {
+  res.render("reportform");
+});
+
+// POST /report - handle form submission
+app.post("/report", (req, res) => {
+  const form = new multiparty.Form({ uploadDir: UPLOAD_DIR });
+
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      return res.status(400).send("Error parsing form");
+    }
+
+    const name = fields.name?.[0]?.trim();
+    const description = fields.description?.[0]?.trim();
+    const location = fields.location?.[0]?.trim();
+    const date = fields.date?.[0]?.trim();
+    const contact = fields.contact?.[0]?.trim();
+    const imageFile = files.image?.[0];
+
+    // Validate all fields present
+    if (!name || !description || !location || !date || !contact || !imageFile) {
+      return res.status(400).send("All fields are required");
+    }
+
+    // Save image - multiparty already saved to uploadDir, get filename
+    const savedFilename = path.basename(imageFile.path);
+    const imagePath = "/uploads/" + savedFilename;
+
+    const newItem = {
+      id: String(Date.now()),
+      name,
+      description,
+      location,
+      date,
+      contact,
+      imagePath,
+      status: "Lost",
+    };
+
+    items.push(newItem);
+    res.redirect("/");
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
