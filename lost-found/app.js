@@ -3,7 +3,6 @@ const { engine } = require("express-handlebars");
 const path = require("path");
 const fs = require("fs");
 const multiparty = require("multiparty");
-const hbs = require("hbs");
 
 const app = express();
 const PORT = 3000;
@@ -34,8 +33,9 @@ app.engine(
   "hbs",
   engine({
     defaultLayout: "main",
-    extname: "hbs",
-    layoutsDir: path.join(__dirname, "views/layouts"),
+    extname: ".hbs",
+    layoutsDir: path.join(__dirname, "views", "layouts"),
+    partialsDir: path.join(__dirname, "views", "partials"),
   }),
 );
 
@@ -45,7 +45,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
+// GET / - home (show report form)
 app.get("/", (req, res) => {
   res.render("dashboard", { items });
 });

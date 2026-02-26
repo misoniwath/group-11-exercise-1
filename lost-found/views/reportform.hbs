@@ -1,0 +1,109 @@
+<div class="bg-white rounded-lg shadow-lg p-8 border-l-4 border-indigo-500">
+  <div class="flex items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">
+      🖼️ Report Lost Item
+    </h2>
+    <span class="ml-auto bg-indigo-100 text-indigo-800 text-xs font-semibold px-3 py-1 rounded-full">
+      multipart/form-data
+    </span>
+  </div>
+
+  <p class="text-gray-600 mb-6 text-sm">
+    This form uploads files. The data is sent as multipart chunks,
+    allowing efficient streaming of file content.
+  </p>
+
+  <form action="/report" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <div>
+      <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="e.g. Blue Wallet"
+        required
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+      />
+    </div>
+
+    <div>
+      <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+      <textarea
+        id="description"
+        name="description"
+        rows="3"
+        placeholder="e.g. Leather wallet with student ID"
+        required
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+      ></textarea>
+    </div>
+
+    <div>
+      <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location Lost</label>
+      <input
+        type="text"
+        id="location"
+        name="location"
+        placeholder="e.g. Library Hall B"
+        required
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+      />
+    </div>
+
+    <div>
+      <label for="date" class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+      <input
+        type="date"
+        id="date"
+        name="date"
+        required
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+      />
+    </div>
+
+    <div>
+      <label for="contact" class="block text-sm font-medium text-gray-700 mb-1">Contact Email</label>
+      <input
+        type="email"
+        id="contact"
+        name="contact"
+        placeholder="your@example.com"
+        required
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
+      />
+    </div>
+
+    <div>
+      <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image File (JPG/PNG only) <span class="text-red-500">(Required)</span></label>
+      <div class="relative">
+        <input
+          type="file"
+          id="image"
+          name="image"
+          accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+          required
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+        />
+      </div>
+      <p class="text-xs text-gray-500 mt-1">
+        ✓ Allowed: JPG, JPEG, PNG | Maximum practical size: 10MB
+      </p>
+    </div>
+
+    <button
+      type="submit"
+      class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 transform hover:scale-[1.02]"
+    >
+      Submit Report
+    </button>
+  </form>
+
+  <div class="mt-6 p-4 bg-indigo-50 border-l-4 border-indigo-500 rounded">
+    <p class="text-sm text-gray-700">
+      <strong>💡 The enctype attribute:</strong><br/>
+      The <span class="font-mono">enctype="multipart/form-data"</span> tells the browser to send data
+      as multiple parts (fields + file streams), which is required for file uploads. Without it,
+      file content would be corrupted or lost.
+    </p>
+  </div>
+</div>

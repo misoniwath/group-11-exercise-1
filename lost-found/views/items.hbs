@@ -1,0 +1,33 @@
+<section class="card">
+  <div class="row-between">
+    <h2>Items</h2>
+    <a href="/report">+ New Report</a>
+  </div>
+
+  {{#if reports.length}}
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each reports}}
+          <tr>
+            <td>{{this.id}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.date}}</td>
+            <td>{{this.status}}</td>
+            <td><a href="/items/{{this.id}}">View Details</a></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  {{else}}
+    <p>No items available yet. <a href="/report">Submit a report</a>.</p>
+  {{/if}}
+</section>

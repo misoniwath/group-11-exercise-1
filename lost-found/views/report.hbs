@@ -1,0 +1,24 @@
+<section class="card">
+  <h2>Report a Lost Item</h2>
+  <form action="/report" method="post" enctype="multipart/form-data" class="form-grid">
+    <label for="name">Item Name</label>
+    <input id="name" name="name" type="text" required />
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4" required></textarea>
+
+    <label for="location">Location Lost</label>
+    <input id="location" name="location" type="text" required />
+
+    <label for="date">Date</label>
+    <input id="date" name="date" type="date" required />
+
+    <label for="contact">Contact Email</label>
+    <input id="contact" name="contact" type="email" required />
+
+    <label for="image">Item Image</label>
+    <input id="image" name="image" type="file" accept="image/*" required />
+
+    <button type="submit">Submit Report</button>
+  </form>
+</section>
